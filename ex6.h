@@ -185,7 +185,9 @@ PokemonNode *removeNodeBST(PokemonNode *root, int id);
  * Why we made it: BFS confirms existence, then removeNodeBST does the removal.
  */
 PokemonNode *removePokemonByID(PokemonNode *root, int id);
-
+PokemonNode* findPokemon (PokemonNode* root, int id);
+PokemonNode *findFather(PokemonNode *root, PokemonNode *toRemove);
+void deletePokemon (PokemonNode **root, PokemonNode *toRemove);
 /* ------------------------------------------------------------
    4) Generic BST Traversals (Function Pointers)
    ------------------------------------------------------------ */
@@ -237,6 +239,16 @@ void printPokemonNode(PokemonNode *node);
 /* ------------------------------------------------------------
    5) Display Methods (BFS, Pre, In, Post, Alphabetical)
    ------------------------------------------------------------ */
+// struct for nodes in the queue
+typedef struct Node {
+   PokemonNode *pokemon;
+   struct Node *next;
+}Node;
+// struct for the queue
+typedef struct Queue
+{
+   Node *front, *rear;
+} Queue;
 
 typedef struct
 {
@@ -291,6 +303,11 @@ void displayAlphabetical(PokemonNode *root);
  * Why we made it: Quick listing in BFS order.
  */
 void displayBFS(PokemonNode *root);
+Queue *createQueue();
+Node *createNode(PokemonNode *pokemon);
+int isEmptyQueue(Queue *queue);
+void enQueue(Queue *queue, PokemonNode *pokemon);
+PokemonNode* deQueue(Queue *queue);
 
 /**
  * @brief Pre-order user-friendly display (Root->Left->Right).
