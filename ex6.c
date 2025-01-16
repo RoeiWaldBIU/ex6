@@ -660,7 +660,7 @@ void evolvePokemon(OwnerNode *owner) {
         else {
             printf("Pokemon evolved from %s (ID %d) to %s (ID %d).\n", toEvolve->data->name, toEvolve->data->id,\
                 pokedex[choice].name, pokedex[choice].id);
-            toEvolve->data = &pokedex[choice];
+            toEvolve->data = (PokemonData*)&pokedex[choice];
             return;
         }
     }
