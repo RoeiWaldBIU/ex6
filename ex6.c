@@ -589,6 +589,7 @@ PokemonNode* findPokemon (PokemonNode* root, int id) {
         return findPokemon(root->left, id);
     if (root->data->id < id)
         return findPokemon(root->right, id);
+    return NULL;
 }
 
 void freePokemon(OwnerNode *owner) {
@@ -768,6 +769,7 @@ OwnerNode *createOwner(char *ownerName, PokemonNode *starter) {
     newOwner->next = NULL;
     newOwner->prev = NULL;
     newOwner->pokedexRoot = starter;
+    return newOwner;
 }
 // Create new pokemon node
 PokemonNode *createPokemonNode(const PokemonData *data) {
