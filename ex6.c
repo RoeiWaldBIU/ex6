@@ -976,7 +976,7 @@ void freeAllOwners(void) {
     OwnerNode* iterator = ownerHead;
     OwnerNode* iteratorNext = iterator->next;
     while (iterator != NULL) {
-        freePokemonTree(iterator);
+        freePokemonTree(iterator->pokedexRoot);
         free(iterator->ownerName);
         free(iterator);
         iterator = iteratorNext;
