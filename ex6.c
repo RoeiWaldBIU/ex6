@@ -834,13 +834,12 @@ OwnerNode* printExistingPokadexToDelete (OwnerNode *head) {
     // return the chosen owner
     return iterator;
 }
-void freePokemonTree(PokemonNode *root) {
-    if (root == NULL)
+void freePokemonTree(PokemonNode *pokemon) {
+    if (pokemon == NULL)
         return;
-    freePokemonTree(root->left);
-    freePokemonTree(root->right);
-    free(root->data->name);
-    free(root);
+    freePokemonTree(pokemon->left);
+    freePokemonTree(pokemon->right);
+    free(pokemon);
 }
 void deletePokedex(void) {
     printf("=== Delete a Pokedex ===\n");
@@ -854,7 +853,6 @@ void deletePokedex(void) {
     free(toDelete);
     printf("Pokedex deleted.\n");
 }
-
 void mergePokedexMenu(void) {
     if (ownerHead == NULL || ownerHead->next == ownerHead) {
         printf("Not enough owners to merge.\n");
@@ -909,6 +907,8 @@ void mergePokedexMenu(void) {
     secondOwner->next->prev = secondOwner->prev;
     if (secondOwner == ownerHead)
         ownerHead = secondOwner->next;
+    freePokemonTree(secondOwner->pokedexRoot);
+    free(secondOwner->ownerName);
     free(secondOwner);
     free(firstOwnerName);
     free(secondOwnerName);
