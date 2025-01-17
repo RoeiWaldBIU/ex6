@@ -839,6 +839,7 @@ void freePokemonTree(PokemonNode *pokemon) {
         return;
     freePokemonTree(pokemon->left);
     freePokemonTree(pokemon->right);
+    free(pokemon->data);
     free(pokemon);
 }
 void deletePokedex(void) {
@@ -896,7 +897,6 @@ void mergePokedexMenu(void) {
         }
         // free the queue memory allocation
         free(queue);
-
     }
 
     printf("Merging %s and %s...\n", firstOwnerName, secondOwnerName);
