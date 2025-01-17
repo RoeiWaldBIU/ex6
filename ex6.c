@@ -972,6 +972,8 @@ void printOwnersCircular(void) {
 void freeAllOwners(void) {
     if (ownerHead == NULL)
         return;
+    // breake the circular
+    ownerHead->prev->next = NULL;
     OwnerNode* iterator = ownerHead;
     OwnerNode* iteratorNext = iterator->next;
     while (iterator != NULL) {
@@ -981,6 +983,7 @@ void freeAllOwners(void) {
         iterator = iteratorNext;
         iteratorNext = iteratorNext->next;
     }
+    free(iterator);
 }
 // --------------------------------------------------------------
 // Main Menu
