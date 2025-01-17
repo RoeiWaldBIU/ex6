@@ -693,6 +693,10 @@ void evolvePokemon(OwnerNode *owner) {
 // Chose an owner and able further action
 void enterExistingPokedexMenu()
 {
+    if (ownerHead == NULL) {
+        printf("No existing Pokedexes.");
+        return;
+    }
     printf("\nExisting Pokedexes:\n");
     // print the owners and chose one
     OwnerNode* pickedOwner = printExistingPokadex(ownerHead);
@@ -861,6 +865,10 @@ void freePokemonTree(PokemonNode *pokemon) {
     free(pokemon);
 }
 void deletePokedex(void) {
+    if (ownerHead == NULL) {
+        printf("No existing Pokedexes to delete.\n");
+        return;
+    }
     printf("\n=== Delete a Pokedex ===\n");
     OwnerNode* toDelete = printExistingPokadexToDelete(ownerHead);
     freePokemonTree(toDelete->pokedexRoot);
@@ -931,6 +939,11 @@ void mergePokedexMenu(void) {
     free(secondOwnerName);
 }
 void sortOwners(void) {
+    if (ownerHead == NULL || ownerHead->next == ownerHead) {
+        printf("0 or 1 owners only => no need to sort.\n");
+        return;
+
+    }
     int ownersNum = 0;
     OwnerNode *iterator = ownerHead;
     do {
@@ -938,6 +951,7 @@ void sortOwners(void) {
         ownersNum++;
     }
     while (iterator != ownerHead);
+
     // bouble sort
     for (int i = 0; i < ownersNum-1; i++) {
         iterator = ownerHead;
