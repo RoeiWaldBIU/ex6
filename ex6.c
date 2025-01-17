@@ -839,7 +839,6 @@ void freePokemonTree(PokemonNode *pokemon) {
         return;
     freePokemonTree(pokemon->left);
     freePokemonTree(pokemon->right);
-    free(pokemon->data);
     free(pokemon);
 }
 void deletePokedex(void) {
