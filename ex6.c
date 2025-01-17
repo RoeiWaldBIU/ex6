@@ -625,8 +625,8 @@ void pokemonFight(OwnerNode *owner) {
         return;
     }
     // Get the picks for the fight
-    int firstId = readIntSafe("Enter ID of the first Pokemon:");
-    int secondId = readIntSafe("Enter ID of the second Pokemon:");
+    int firstId = readIntSafe("Enter ID of the first Pokemon: ");
+    int secondId = readIntSafe("Enter ID of the second Pokemon: ");
     // Get the pokemons addresses
     PokemonNode *firstPokemon = findPokemon(owner->pokedexRoot, firstId);
     PokemonNode *secondPokemon = findPokemon(owner->pokedexRoot, secondId);
@@ -639,7 +639,7 @@ void pokemonFight(OwnerNode *owner) {
     float resultfirst = (float)firstPokemon->data->attack*1.5 + (float)firstPokemon->data->hp*1.2;
     printf("Pokemon 1: %s (Score = %.2f)\n", firstPokemon->data->name, resultfirst);
     float resultsecond = (float)secondPokemon->data->attack*1.5 + (float)secondPokemon->data->hp*1.2;
-    printf("Pokemon 2: %s (Score = %.2f)\n", firstPokemon->data->name, resultsecond);
+    printf("Pokemon 2: %s (Score = %.2f)\n", secondPokemon->data->name, resultsecond);
     // the first pokemon is the winner
     if (resultfirst > resultsecond)
         printf("%s wins!\n", firstPokemon->data->name);
@@ -849,7 +849,7 @@ OwnerNode* printExistingPokadexToDelete (OwnerNode *head) {
     // mvoe the iterator to the choosen owner
     for (int i = 0; i < ownerNum-1; i++)
         iterator = iterator->next;
-    printf("\nDeleting %s's entire Pokedex...\n", iterator->ownerName);
+    printf("Deleting %s's entire Pokedex...\n", iterator->ownerName);
     // return the chosen owner
     return iterator;
 }
@@ -861,7 +861,7 @@ void freePokemonTree(PokemonNode *pokemon) {
     free(pokemon);
 }
 void deletePokedex(void) {
-    printf("=== Delete a Pokedex ===\n");
+    printf("\n=== Delete a Pokedex ===\n");
     OwnerNode* toDelete = printExistingPokadexToDelete(ownerHead);
     freePokemonTree(toDelete->pokedexRoot);
     toDelete->prev->next = toDelete->next;
@@ -877,10 +877,10 @@ void mergePokedexMenu(void) {
         printf("Not enough owners to merge.\n");
         return;
     }
-    printf("=== Merge Pokedexes ===\n");
-    printf("Enter name of first owner:");
+    printf("\n=== Merge Pokedexes ===\n");
+    printf("Enter name of first owner: ");
     char* firstOwnerName = getDynamicInput();
-    printf("Enter name of second owner:");
+    printf("Enter name of second owner: ");
     char* secondOwnerName = getDynamicInput();
     OwnerNode* firstOwner = findOwnerByName(firstOwnerName);
     OwnerNode* secondOwner = findOwnerByName(secondOwnerName);
@@ -964,15 +964,15 @@ void printOwnersCircular(void) {
         printf("No owners.\n");
         return;
     }
-    printf("Enter direction (F or B):\n");
+    printf("Enter direction (F or B): ");
     char* direction = getDynamicInput();
     while (*direction != 'F' && *direction != 'B' && *direction != 'f' && *direction != 'b') {
         printf("Invalid direction, must be L or R.\n");
-        printf("Enter direction (F or B):\n");
+        printf("Enter direction (F or B): ");
         free (direction);
         direction = getDynamicInput();
     }
-    int printNum = readIntSafe("How many prints?");
+    int printNum = readIntSafe("How many prints? ");
     OwnerNode* iterator = ownerHead;
     if (*direction == 'F' || *direction == 'f') {
         for (int i = 0; i < printNum; i++) {
