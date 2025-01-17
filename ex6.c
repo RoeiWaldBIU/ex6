@@ -874,7 +874,7 @@ void mergePokedexMenu(void) {
         printf("Both Pokedexes empty. Nothing to merge.\n");
         return;
     }
-    // If the pokedex is enpty
+
     if (secondOwner->pokedexRoot != NULL) {
         // Create a queue
         Queue *queue = createQueue();
@@ -906,7 +906,6 @@ void mergePokedexMenu(void) {
     secondOwner->next->prev = secondOwner->prev;
     if (secondOwner == ownerHead)
         ownerHead = secondOwner->next;
-    freePokemonTree(secondOwner->pokedexRoot);
     free(secondOwner->ownerName);
     free(secondOwner);
     free(firstOwnerName);
