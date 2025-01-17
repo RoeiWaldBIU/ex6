@@ -494,7 +494,6 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
     }
     // if this pokemon is already exist
     else {
-        printf("\nPokemon with ID %d is already in the Pokedex. No changes made.\n", newNode->data->id);
         return NULL;
     }
     return newNode;
@@ -506,10 +505,19 @@ void addPokemon(OwnerNode *owner) {
     // Adjust the ID of the pokemon to his location in the array
     choice--;
     // Create pokemon node
-    PokemonNode* newPokemon = createPokemonNode(pokedex + choice);
-    // insert the new pokemon to his location in the binary tree
-    PokemonNode*insertPkemon = insertPokemonNode(owner->pokedexRoot, newPokemon);
-    printf("\nPokemon %s (ID %d) added. \n", insertPkemon->data->name, insertPkemon->data->id);
+    PokemonNode* newPokemon = createPokemonNode(pokedex + choice);;
+    if (owner->pokedexRoot == NULL) {
+        owner->pokedexRoot = newPokemon;
+    }
+    else {
+        // insert the new pokemon to his location in the binary tree
+        newPokemon = insertPokemonNode(owner->pokedexRoot, newPokemon);
+        if (newPokemon == NULL) {
+            printf("Pokemon with ID %d is already in the Pokedex. No changes made.\n", choice+1);
+            return;
+        }
+    }
+    printf("\nPokemon %s (ID %d) added. \n", newPokemon->data->name, newPokemon->data->id);
 }
 PokemonNode *findFather(PokemonNode *root, PokemonNode *toRemove) {
     PokemonNode *father = root;
@@ -593,6 +601,10 @@ PokemonNode* findPokemon (PokemonNode* root, int id) {
 }
 
 void freePokemon(OwnerNode *owner) {
+    if (owner->pokedexRoot == NULL) {
+        printf("No Pokemon to release.\n");
+        return;
+    }
     int choice = readIntSafe("Enter Pokemon ID to release:");
     PokemonNode *toRemove = findPokemon(owner->pokedexRoot, choice);
     if (toRemove == NULL) {
@@ -605,6 +617,10 @@ void freePokemon(OwnerNode *owner) {
 }
 // Pokemon fight
 void pokemonFight(OwnerNode *owner) {
+    if (owner->pokedexRoot == NULL) {
+        printf("Pokedex is empty.\n");
+        return;
+    }
     // Get the picks for the fight
     int firstId = readIntSafe("Enter ID of the first Pokemon:");
     int secondId = readIntSafe("Enter ID of the second Pokemon:");
