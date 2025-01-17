@@ -975,13 +975,12 @@ void freeAllOwners(void) {
     // breake the circular
     ownerHead->prev->next = NULL;
     OwnerNode* iterator = ownerHead;
-    OwnerNode* iteratorNext = iterator->next;
     while (iterator != NULL) {
+        OwnerNode* iteratorNext = iterator->next;
         freePokemonTree(iterator->pokedexRoot);
         free(iterator->ownerName);
         free(iterator);
         iterator = iteratorNext;
-        iteratorNext = iteratorNext->next;
     }
     free(iterator);
 }
