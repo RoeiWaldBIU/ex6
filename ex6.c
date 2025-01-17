@@ -499,6 +499,11 @@ void displayBFS(PokemonNode *root) {
             enQueue(queue, current->right);
     }
     // free the queue memory allocation
+    while (queue->front != NULL) {
+        Node *temp = queue->front;
+        queue->front = queue->front->next;
+        free(temp);
+    }
     free(queue);
 }
 
@@ -1044,6 +1049,11 @@ void mergePokedexMenu(void) {
                 enQueue(queue, current->right);
         }
         // free the queue memory allocation
+        while (queue->front != NULL) {
+            Node *temp = queue->front;
+            queue->front = queue->front->next;
+            free(temp);
+        }
         free(queue);
     }
     printf("Merging %s and %s...\n", firstOwnerName, secondOwnerName);
