@@ -480,8 +480,10 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
 
         }
         // if the left children is already occupied - move on to the left children and now check for him (recursivlly)
-        else
-            insertPokemonNode(root->left, newNode);
+        else {
+            if (insertPokemonNode(root->left, newNode) == NULL)
+                return NULL;
+        }
     }
     // if the new pokemon is greater than the root - right (amd same implementation as the left)
     else if (root->data->id < newNode->data->id) {
@@ -489,7 +491,8 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
             root->right = newNode;
         }
         else{
-            insertPokemonNode(root->right, newNode);
+            if (insertPokemonNode(root->right, newNode) == NULL)
+                return NULL;
         }
     }
     // if this pokemon is already exist
@@ -511,13 +514,13 @@ void addPokemon(OwnerNode *owner) {
     }
     else {
         // insert the new pokemon to his location in the binary tree
-        newPokemon = insertPokemonNode(owner->pokedexRoot, newPokemon);
-        if (newPokemon == NULL) {
+        if (insertPokemonNode(owner->pokedexRoot, newPokemon) == NULL) {
             printf("Pokemon with ID %d is already in the Pokedex. No changes made.\n", choice+1);
+            free(newPokemon);
             return;
         }
     }
-    printf("\nPokemon %s (ID %d) added. \n", newPokemon->data->name, newPokemon->data->id);
+    printf("Pokemon %s (ID %d) added. \n", newPokemon->data->name, newPokemon->data->id);
 }
 PokemonNode *findFather(PokemonNode *root, PokemonNode *toRemove) {
     PokemonNode *father = root;
@@ -611,7 +614,7 @@ void freePokemon(OwnerNode *owner) {
         printf("No Pokemon with ID %d found.\n", choice);
         return;
     }
-    printf("Removing Pokemon %s (ID %d)\n", toRemove->data->name, toRemove->data->id);
+    printf("Removing Pokemon %s (ID %d).\n", toRemove->data->name, toRemove->data->id);
     deletePokemon (&owner->pokedexRoot, toRemove);
 
 }
@@ -636,7 +639,7 @@ void pokemonFight(OwnerNode *owner) {
     float resultfirst = (float)firstPokemon->data->attack*1.5 + (float)firstPokemon->data->hp*1.2;
     printf("Pokemon 1: %s (Score = %.2f)\n", firstPokemon->data->name, resultfirst);
     float resultsecond = (float)secondPokemon->data->attack*1.5 + (float)secondPokemon->data->hp*1.2;
-    printf("Pokemon 1: %s (Score = %.2f)\n", firstPokemon->data->name, resultsecond);
+    printf("Pokemon 2: %s (Score = %.2f)\n", firstPokemon->data->name, resultsecond);
     // the first pokemon is the winner
     if (resultfirst > resultsecond)
         printf("%s wins!\n", firstPokemon->data->name);
