@@ -184,9 +184,13 @@ PokemonNode *removeNodeBST(PokemonNode *root, int id);
  * @return updated BST root
  * Why we made it: BFS confirms existence, then removeNodeBST does the removal.
  */
+
 PokemonNode *removePokemonByID(PokemonNode *root, int id);
+// find the address of a pokemon node by given ID
 PokemonNode* findPokemon (PokemonNode* root, int id);
+// find the father of a pokemon node
 PokemonNode *findFather(PokemonNode *root, PokemonNode *toRemove);
+// delete the pokemone node from the BST
 void deletePokemon (PokemonNode **root, PokemonNode *toRemove);
 /* ------------------------------------------------------------
    4) Generic BST Traversals (Function Pointers)
@@ -235,8 +239,9 @@ void postOrderGeneric(PokemonNode *root, VisitNodeFunc visit);
  * Why we made it: We can pass this to BFSGeneric or others to quickly print.
  */
 void printPokemonNode(PokemonNode *node);
-
+// print and choose a pokedex to enter the further action
 OwnerNode* printExistingPokadex (OwnerNode *head);
+// print and choose a pokadex to delete
 OwnerNode* printExistingPokadexToDelete (OwnerNode *head);
 
 /* ------------------------------------------------------------
@@ -306,10 +311,15 @@ void displayAlphabetical(PokemonNode *root);
  * Why we made it: Quick listing in BFS order.
  */
 void displayBFS(PokemonNode *root);
+// create a queue of the pokemons
 Queue *createQueue();
+// create a node in the queue
 Node *createNode(PokemonNode *pokemon);
+// check if the queue is enpty
 int isEmptyQueue(Queue *queue);
+// insert a node to the queue
 void enQueue(Queue *queue, PokemonNode *pokemon);
+// get the address of the first node in the queue
 PokemonNode* deQueue(Queue *queue);
 
 /**

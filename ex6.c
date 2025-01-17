@@ -916,6 +916,7 @@ void openPokedexMenu(void) {
     // if the name is already exist
     if (findOwnerByName(name)) {
         printf("Owner '%s' already exists. Not creating a new Pokedex.\n", name);
+        free(name);
         return;
     }
     printf("Choose Starter:\n");
