@@ -499,11 +499,6 @@ void displayBFS(PokemonNode *root) {
             enQueue(queue, current->right);
     }
     // free the queue memory allocation
-    while (queue->front != NULL) {
-        Node *temp = queue->front;
-        queue->front = queue->front->next;
-        free(temp);
-    }
     free(queue);
 }
 
@@ -546,8 +541,10 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
         // if the left children is already occupied - move on to the left children and now check for him (recursivlly)
         else {
             // if this pokemon is exist in the next
-            if (insertPokemonNode(root->left, newNode) == NULL)
+            if (insertPokemonNode(root->left, newNode) == NULL) {
+                free(newNode);
                 return NULL;
+            }
         }
     }
     // if the new pokemon is greater than the root - right (amd same implementation as the left)
@@ -1049,11 +1046,6 @@ void mergePokedexMenu(void) {
                 enQueue(queue, current->right);
         }
         // free the queue memory allocation
-        while (queue->front != NULL) {
-            Node *temp = queue->front;
-            queue->front = queue->front->next;
-            free(temp);
-        }
         free(queue);
     }
     printf("Merging %s and %s...\n", firstOwnerName, secondOwnerName);
