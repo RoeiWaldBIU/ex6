@@ -898,8 +898,7 @@ void mergePokedexMenu(void) {
         }
         // free the queue memory allocation
         free(queue);
-        free(firstOwnerName);
-        free(secondOwnerName);
+
     }
 
     printf("Merging %s and %s...\n", firstOwnerName, secondOwnerName);
@@ -911,6 +910,8 @@ void mergePokedexMenu(void) {
     if (secondOwner == ownerHead)
         ownerHead = secondOwner->next;
     free(secondOwner);
+    free(firstOwnerName);
+    free(secondOwnerName);
 }
 void sortOwners(void) {
     int ownersNum = 0;
