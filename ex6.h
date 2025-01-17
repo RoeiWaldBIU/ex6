@@ -236,6 +236,9 @@ void postOrderGeneric(PokemonNode *root, VisitNodeFunc visit);
  */
 void printPokemonNode(PokemonNode *node);
 
+OwnerNode* printExistingPokadex (OwnerNode *head);
+OwnerNode* printExistingPokadexToDelete (OwnerNode *head);
+
 /* ------------------------------------------------------------
    5) Display Methods (BFS, Pre, In, Post, Alphabetical)
    ------------------------------------------------------------ */

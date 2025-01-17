@@ -477,7 +477,7 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
         // if the left position is empty - insert there
         if (root->left == NULL) {
             root->left = newNode;
-            printf("\nPokemon %s (ID %d) added. \n", newNode->data->name, newNode->data->id);
+
         }
         // if the left children is already occupied - move on to the left children and now check for him (recursivlly)
         else
@@ -487,7 +487,6 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
     else if (root->data->id < newNode->data->id) {
         if (root->right == NULL) {
             root->right = newNode;
-            printf("\nPokemon %s (ID %d) added. \n", newNode->data->name, newNode->data->id);
         }
         else{
             insertPokemonNode(root->right, newNode);
@@ -498,7 +497,7 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
         printf("\nPokemon with ID %d is already in the Pokedex. No changes made.\n", newNode->data->id);
         return NULL;
     }
-    return root;
+    return newNode;
 }
 // Add pokemon to the pokedex of the picked owner
 void addPokemon(OwnerNode *owner) {
@@ -509,7 +508,8 @@ void addPokemon(OwnerNode *owner) {
     // Create pokemon node
     PokemonNode* newPokemon = createPokemonNode(pokedex + choice);
     // insert the new pokemon to his location in the binary tree
-    insertPokemonNode(owner->pokedexRoot, newPokemon);
+    PokemonNode*insertPkemon = insertPokemonNode(owner->pokedexRoot, newPokemon);
+    printf("\nPokemon %s (ID %d) added. \n", insertPkemon->data->name, insertPkemon->data->id);
 }
 PokemonNode *findFather(PokemonNode *root, PokemonNode *toRemove) {
     PokemonNode *father = root;
@@ -812,7 +812,177 @@ void openPokedexMenu(void) {
     printf("New Pokedex created for %s with starter %s.\n", newOwner->ownerName,\
         newOwner->pokedexRoot->data->name);
 }
+OwnerNode* printExistingPokadexToDelete (OwnerNode *head) {
+    // Create itarator that will run on the linking list - starting from the head
+    OwnerNode *iterator = head;
+    // Create counter that will be the number of the owner in the list
+    int counter = 1;
+    // Print the owner name and the number, then nove the iterator to the next owner and increment the counter
+    do {
+        printf("%d. %s\n", counter, iterator->ownerName);
+        counter++;
+        iterator = iterator->next;
+    }
+    // Print until complete a circle
+    while (iterator != head);
+    // Now choose an owner by his number
+    int ownerNum = readIntSafe("Choose a Pokedex to delete by number: ");
+    // mvoe the iterator to the choosen owner
+    for (int i = 0; i < ownerNum-1; i++)
+        iterator = iterator->next;
+    printf("Deleting %s's entire Pokedex...\n", iterator->ownerName);
+    // return the chosen owner
+    return iterator;
+}
+void freePokemonTree(PokemonNode *root) {
+    if (root == NULL)
+        return;
+    freePokemonTree(root->left);
+    freePokemonTree(root->right);
+    free(root->data->name);
+    free(root);
+}
+void deletePokedex(void) {
+    printf("=== Delete a Pokedex ===\n");
+    OwnerNode* toDelete = printExistingPokadexToDelete(ownerHead);
+    freePokemonTree(toDelete->pokedexRoot);
+    toDelete->prev->next = toDelete->next;
+    toDelete->next->prev = toDelete->prev;
+    if (toDelete == ownerHead)
+        ownerHead = toDelete->next;
+    free(toDelete->ownerName);
+    free(toDelete);
+    printf("Pokedex deleted.\n");
+}
 
+void mergePokedexMenu(void) {
+    if (ownerHead == NULL || ownerHead->next == ownerHead) {
+        printf("Not enough owners to merge.\n");
+        return;
+    }
+    printf("=== Merge Pokedexes ===\n");
+    printf("Enter name of first owner:");
+    char* firstOwnerName = getDynamicInput();
+    printf("Enter name of second owner:");
+    char* secondOwnerName = getDynamicInput();
+    OwnerNode* firstOwner = findOwnerByName(firstOwnerName);
+    OwnerNode* secondOwner = findOwnerByName(secondOwnerName);
+    if (firstOwner == NULL || secondOwner == NULL) {
+        printf("One or both owners not found.\n");
+        return;
+    }
+    // if both empty
+    if (secondOwner->pokedexRoot == NULL && secondOwner->pokedexRoot == NULL ) {
+        printf("Both Pokedexes empty. Nothing to merge.\n");
+        return;
+    }
+    // If the pokedex is enpty
+    if (secondOwner->pokedexRoot != NULL) {
+        // Create a queue
+        Queue *queue = createQueue();
+        // attach the root to the queue
+        enQueue(queue, secondOwner->pokedexRoot);
+        // as long as the queue us not empty - keep printing getting the nodes out
+        while (!isEmptyQueue(queue)) {
+            PokemonNode *current = deQueue(queue);
+            // create a node for the pokemon node
+            PokemonNode* newPokemon = createPokemonNode(pokedex + (current->data->id-1));
+            // insert the new pokemon to his location in the binary tree
+            insertPokemonNode(firstOwner->pokedexRoot, newPokemon);
+            // add the left children to the queue
+            if (current->left != NULL)
+                enQueue(queue, current->left);
+            // add the right children to the queue
+            if (current->right != NULL)
+                enQueue(queue, current->right);
+        }
+        // free the queue memory allocation
+        free(queue);
+        free(firstOwnerName);
+        free(secondOwnerName);
+    }
+
+    printf("Merging %s and %s...\n", firstOwnerName, secondOwnerName);
+    printf("Merge completed.\n");
+    printf("Owner '%s' has been removed after merging.\n", secondOwnerName);
+    freePokemonTree(secondOwner->pokedexRoot);
+    secondOwner->prev->next = secondOwner->next;
+    secondOwner->next->prev = secondOwner->prev;
+    if (secondOwner == ownerHead)
+        ownerHead = secondOwner->next;
+    free(secondOwner);
+}
+void sortOwners(void) {
+    int ownersNum = 0;
+    OwnerNode *iterator = ownerHead;
+    do {
+        iterator = iterator->next;
+        ownersNum++;
+    }
+    while (iterator != ownerHead);
+    // bouble sort
+    for (int i = 0; i < ownersNum-1; i++) {
+        iterator = ownerHead;
+        for (int j = 0; j < ownersNum - i - 1; j++) {
+            OwnerNode* iteratorNext = iterator->next;
+            if (strcmp(iterator->ownerName, iteratorNext->ownerName) > 0) {
+                swapOwnerData(iterator, iteratorNext);
+            }
+            iterator = iterator->next;
+        }
+    }
+    printf("Owners sorted by name.\n");
+}
+void swapOwnerData(OwnerNode *a, OwnerNode *b) {
+    PokemonNode* aRoot = a->pokedexRoot;
+    char* aOwnerName = a->ownerName;
+    a->ownerName = b->ownerName;
+    a->pokedexRoot = b->pokedexRoot;
+    b->ownerName = aOwnerName;
+    b->pokedexRoot = aRoot;
+}
+void printOwnersCircular(void) {
+    if (ownerHead == NULL) {
+        printf("No owners.\n");
+        return;
+    }
+    printf("Enter direction (F or B):\n");
+    char* direction = getDynamicInput();
+    while (*direction != 'F' && *direction != 'B' && *direction != 'f' && *direction != 'b') {
+        printf("Invalid direction, must be L or R.\n");
+        printf("Enter direction (F or B):\n");
+        free (direction);
+        direction = getDynamicInput();
+    }
+    int printNum = readIntSafe("How many prints?");
+    OwnerNode* iterator = ownerHead;
+    if (*direction == 'F' || *direction == 'f') {
+        for (int i = 0; i < printNum; i++) {
+            printf("[%d] %s\n", i+1, iterator->ownerName);
+            iterator = iterator->next;
+        }
+    }
+    else {
+        for (int i = 0; i < printNum; i++) {
+            printf("[%d] %s\n", i+1, iterator->ownerName);
+            iterator = iterator->prev;
+        }
+    }
+    free(direction);
+}
+void freeAllOwners(void) {
+    if (ownerHead == NULL)
+        return;
+    OwnerNode* iterator = ownerHead;
+    OwnerNode* iteratorNext = iterator->next;
+    while (iterator != NULL) {
+        freePokemonTree(iterator);
+        free(iterator->ownerName);
+        free(iterator);
+        iterator = iteratorNext;
+        iteratorNext = iteratorNext->next;
+    }
+}
 // --------------------------------------------------------------
 // Main Menu
 // --------------------------------------------------------------
@@ -842,16 +1012,16 @@ void mainMenu()
             enterExistingPokedexMenu();
             break;
         case 3:
-            //deletePokedex();
+            deletePokedex();
             break;
         case 4:
-            //mergePokedexMenu();
+            mergePokedexMenu();
             break;
         case 5:
-            //sortOwners();
+            sortOwners();
             break;
         case 6:
-            //printOwnersCircular();
+            printOwnersCircular();
             break;
         case 7:
             printf("Goodbye!\n");
@@ -865,6 +1035,6 @@ void mainMenu()
 int main()
 {
     mainMenu();
-    //freeAllOwners();
+    freeAllOwners();
     return 0;
 }
