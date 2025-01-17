@@ -542,7 +542,6 @@ PokemonNode *insertPokemonNode(PokemonNode *root, PokemonNode *newNode) {
         else {
             // if this pokemon is exist in the next
             if (insertPokemonNode(root->left, newNode) == NULL) {
-                free(newNode);
                 return NULL;
             }
         }
@@ -1037,7 +1036,8 @@ void mergePokedexMenu(void) {
             // create a node for the pokemon node
             PokemonNode* newPokemon = createPokemonNode(pokedex + (current->data->id-1));
             // insert the new pokemon to his location in the binary tree of the first owner
-            insertPokemonNode(firstOwner->pokedexRoot, newPokemon);
+            if (insertPokemonNode(firstOwner->pokedexRoot, newPokemon) == NULL)
+                free(newPokemon);
             // add the left children to the queue
             if (current->left != NULL)
                 enQueue(queue, current->left);
