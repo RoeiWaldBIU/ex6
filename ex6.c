@@ -466,7 +466,7 @@ OwnerNode* printExistingPokadex (OwnerNode *head) {
     // mvoe the iterator to the choosen owner
     for (int i = 0; i < ownerNum-1; i++)
         iterator = iterator->next;
-    printf("Entering %s's Pokedex...\n", iterator->ownerName);
+    printf("\nEntering %s's Pokedex...\n", iterator->ownerName);
     // return the chosen owner
     return iterator;
 }
@@ -605,7 +605,7 @@ void freePokemon(OwnerNode *owner) {
         printf("No Pokemon to release.\n");
         return;
     }
-    int choice = readIntSafe("Enter Pokemon ID to release:");
+    int choice = readIntSafe("Enter Pokemon ID to release: ");
     PokemonNode *toRemove = findPokemon(owner->pokedexRoot, choice);
     if (toRemove == NULL) {
         printf("No Pokemon with ID %d found.\n", choice);
@@ -809,7 +809,7 @@ void openPokedexMenu(void) {
     char* name = getDynamicInput();
     // if the name is already exist
     if (findOwnerByName(name)) {
-        printf("\nOwner '%s' already exists. Not creating a new Pokedex.\n", name);
+        printf("Owner '%s' already exists. Not creating a new Pokedex.\n", name);
         return;
     }
     printf("Choose Starter:\n");
@@ -846,7 +846,7 @@ OwnerNode* printExistingPokadexToDelete (OwnerNode *head) {
     // mvoe the iterator to the choosen owner
     for (int i = 0; i < ownerNum-1; i++)
         iterator = iterator->next;
-    printf("Deleting %s's entire Pokedex...\n", iterator->ownerName);
+    printf("\nDeleting %s's entire Pokedex...\n", iterator->ownerName);
     // return the chosen owner
     return iterator;
 }
