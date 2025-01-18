@@ -476,13 +476,8 @@ PokemonNode* deQueue(Queue *queue) {
     free(nodeInQueue);
     return pokemon;
 }
-// Print in BFS
-void displayBFS(PokemonNode *root) {
-    // If the pokedex is enpty
-    if (root == NULL){
-        printf("Pokedex is empty.\n");
-        return;
-    }
+void BFSGeneric(PokemonNode *root, VisitNodeFunc visit)
+{
     // Create a queue
     Queue *queue = createQueue();
     // attach the root to the queue
@@ -490,7 +485,7 @@ void displayBFS(PokemonNode *root) {
     // as long as the queue us not empty - keep printing getting the nodes out
     while (!isEmptyQueue(queue)) {
         PokemonNode *current = deQueue(queue);
-        printPokemonNode(current);
+        visit(current);
         // add the left children to the queue
         if (current->left != NULL)
             enQueue(queue, current->left);
@@ -501,7 +496,15 @@ void displayBFS(PokemonNode *root) {
     // free the queue memory allocation
     free(queue);
 }
-
+// Print in BFS
+void displayBFS(PokemonNode *root) {
+    // If the pokedex is enpty
+    if (root == NULL){
+        printf("Pokedex is empty.\n");
+        return;
+    }
+    BFSGeneric(root, printPokemonNode);
+}
 
 // --------------------------------------------------------------
 // Sub-menu for existing Pokedex
@@ -1035,8 +1038,8 @@ void mergePokedexMenu(void) {
         while (!isEmptyQueue(queue)) {
             PokemonNode *current = deQueue(queue);
             // create a node for the pokemon node
-            PokemonNode* newPokemon = createPokemonNode(pokedex + (current->data->id-1));
-            // insert the new pokemon to his location in the binary tree of the first owner
+           PokemonNode* newPokemon = createPokemonNode(pokedex + (current->data->id-1));
+            //insert the new pokemon to his location in the binary tree of the first owner
             if (insertPokemonNode(firstOwner->pokedexRoot, newPokemon) == NULL)
                 free(newPokemon);
             // add the left children to the queue

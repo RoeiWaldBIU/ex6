@@ -457,7 +457,7 @@ void deletePokedex(void);
  * Why we made it: BFS copy demonstration plus removing an owner.
  */
 void mergePokedexMenu(void);
-
+void insertInMerge (PokemonNode* root, const PokemonData *data);
 /* ------------------------------------------------------------
    11) Printing Owners in a Circle
    ------------------------------------------------------------ */
