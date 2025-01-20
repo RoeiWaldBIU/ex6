@@ -930,6 +930,7 @@ void openPokedexMenu(void) {
     // cant choose diffrent then these options
     if (choice > 3 || choice < 1) {
         printf("Invalid choice.\n");
+        free(name);
         return;
     }
     // adjust the choice to its real location in the pokemons array
@@ -1021,11 +1022,17 @@ void mergePokedexMenu(void) {
     // if one or both arent exist
     if (firstOwner == NULL || secondOwner == NULL) {
         printf("One or both owners not found.\n");
+        // free the names allocation
+        free(firstOwnerName);
+        free(secondOwnerName);
         return;
     }
     // if both empty
     if (firstOwner->pokedexRoot == NULL && secondOwner->pokedexRoot == NULL ) {
         printf("Both Pokedexes empty. Nothing to merge.\n");
+        // free the names allocation
+        free(firstOwnerName);
+        free(secondOwnerName);
         return;
     }
     // If the first owner pokedex is empty - take the root of the second
