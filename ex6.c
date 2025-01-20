@@ -1024,12 +1024,17 @@ void mergePokedexMenu(void) {
         return;
     }
     // if both empty
-    if (secondOwner->pokedexRoot == NULL && secondOwner->pokedexRoot == NULL ) {
+    if (firstOwner->pokedexRoot == NULL && secondOwner->pokedexRoot == NULL ) {
         printf("Both Pokedexes empty. Nothing to merge.\n");
         return;
     }
+    // If the first owner pokedex is empty - take the root of the second
+    if (firstOwner->pokedexRoot == NULL) {
+        firstOwner->pokedexRoot = secondOwner->pokedexRoot;
+        secondOwner->pokedexRoot = NULL;
+    }
     // make a queue to insert the second owner pokemons
-    if (secondOwner->pokedexRoot != NULL) {
+    if (firstOwner->pokedexRoot != NULL && secondOwner->pokedexRoot != NULL) {
         // Create a queue
         Queue *queue = createQueue();
         // attach the root to the queue
@@ -1061,11 +1066,14 @@ void mergePokedexMenu(void) {
     // if the second is the head, update the head
     if (secondOwner == ownerHead)
         ownerHead = secondOwner->next;
-    // free the second owner
-    freePokemonTree(secondOwner->pokedexRoot);
-    free(secondOwner->ownerName);
-    free(secondOwner);
-    // free the names allocation
+    // If the second pokedex was copy to the first - free it
+    if (secondOwner->pokedexRoot != NULL) {
+        // free the second owner
+        freePokemonTree(secondOwner->pokedexRoot);
+        free(secondOwner->ownerName);
+        free(secondOwner);
+    }
+        // free the names allocation
     free(firstOwnerName);
     free(secondOwnerName);
 }
