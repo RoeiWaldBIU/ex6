@@ -1073,13 +1073,14 @@ void mergePokedexMenu(void) {
     // if the second is the head, update the head
     if (secondOwner == ownerHead)
         ownerHead = secondOwner->next;
-    // If the second pokedex was copy to the first - free it
+    // If the second pokedex was copy to the first - free the root
     if (secondOwner->pokedexRoot != NULL) {
-        // free the second owner
+
         freePokemonTree(secondOwner->pokedexRoot);
-        free(secondOwner->ownerName);
-        free(secondOwner);
     }
+    // free the second owner
+    free(secondOwner->ownerName);
+    free(secondOwner);
         // free the names allocation
     free(firstOwnerName);
     free(secondOwnerName);
