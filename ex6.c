@@ -365,7 +365,7 @@ void collectAll(PokemonNode *root, NodeArray *na) {
     // realloce new memory for every added pokemon pointer
     na->nodes = realloc(na->nodes, (na->size+1) * sizeof(PokemonNode*));
     // If memory allocation failed
-    if (!na->nodes) {
+    if (na->nodes == NULL) {
         printf("Memory allocation failed.\n");
         exit(1);
     }
@@ -782,7 +782,9 @@ void evolvePokemon(OwnerNode *owner) {
         else {
             printf("Pokemon evolved from %s (ID %d) to %s (ID %d).\n", toEvolve->data->name, toEvolve->data->id,\
                 pokedex[choice].name, pokedex[choice].id);
-            toEvolve->data = (PokemonData*)&pokedex[choice];
+            PokemonNode* newPokemon = createPokemonNode(pokedex + choice);
+            insertPokemonNode(owner->pokedexRoot, newPokemon);
+            deletePokemon(&owner->pokedexRoot, toEvolve);
             return;
         }
     }
@@ -933,7 +935,7 @@ void openPokedexMenu(void) {
         free(name);
         return;
     }
-    // adjust the choice to its real location in the pokemons array
+    // adjust the choice to it's real location in the pokemons array
     choice = (choice - 1) * 3;
     // create new pokemon node
     PokemonNode* newPokemon = createPokemonNode(pokedex + choice);
